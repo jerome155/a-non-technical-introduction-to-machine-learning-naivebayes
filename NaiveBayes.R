@@ -11,22 +11,22 @@ NaiveBayes_TrainModel <- function(train_data, train_data_dependent_column,
   dummy0 <- as.numeric(train_data$Y == 0)
   
   train_data <- cbind(train_data, dummy0, dummy1)
-  train_data <- colnames(train_data)[5:6] <- c("0", "1")
+  colnames(train_data)[5:6] <- c("0", "1")
   
   #Step 1 (Slide 7): Define P(A), calculate the probability.
-  class.probability <- aggregate(datanew[, train_data_dependent_column], 
-                                 by=list(datanew[,train_data_dependent_column]),
+  class.probability <- aggregate(train_data[, train_data_dependent_column], 
+                                 by=list(train_data[,train_data_dependent_column]),
                                  FUN="length")
   class.probability[,'x'] <- class.probability[,'x'] / 
     sum(class.probability[,'x'])
   
   #Step 2 (Slide 8): Define P(B|A), separate the data and calculate mean / 
   #standard deviation (sd).
-  likelihood.mean <- aggregate(datanew[, train_data_feature_columns], 
-                               by=list(datanew[,train_data_dependent_column]), 
+  likelihood.mean <- aggregate(train_data[, train_data_feature_columns], 
+                               by=list(train_data[,train_data_dependent_column]), 
                                FUN="mean")
-  likelihood.sd <- aggregate(datanew[, train_data_feature_columns], 
-                             by=list(datanew[,train_data_dependent_column]), 
+  likelihood.sd <- aggregate(train_data[, train_data_feature_columns], 
+                             by=list(train_data[,train_data_dependent_column]), 
                              FUN="sd")
   
   #Pack all generated information / data into a container and return it (=model).
